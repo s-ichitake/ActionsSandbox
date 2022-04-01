@@ -31,4 +31,7 @@ jobs:
         name: Show pipeline IDs
         run: |
           list=${{ fromJson(steps.parse-pipelines.outputs.pipelines).pipelineIdList.*.id }}
-          for e in ${list[@]}; do; echo $e; done;
+          for e in ${list[@]} \
+          do \
+          echo $e \
+          done
