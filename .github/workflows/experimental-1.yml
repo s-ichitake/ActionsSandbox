@@ -1,0 +1,32 @@
+name: Sample Github action
+on: push
+
+jobs:
+  list-files:
+    name: Confirmation
+    runs-on: ubuntu-latest
+    steps:
+      - id: echo
+        name: Echo
+        run: echo "Pushed."
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - id: test-git-command
+        name: Test for git command usability
+        run: git log --oneline
+      # JSONをパースしてoutputにセット(改行を入れるとoutputが機能しないため除去)
+      - id: parse-pipeline-id
+        name: Set parsed JSON for output
+        run: echo "::set-output name=json::$(cat pipeline-id.json | tr -d '\n' | tr -d '\r')"
+      - id: output-pipeline-id
+        name: Show pipeline ID
+        run: echo ${{ fromJson(steps.parse-pipeline-id.outputs.json).pipelineId }}
+      - id: parse-pipelines
+        name: Parse pipeline list
+        run: echo "::set-output name=pipelines::$(cat list-pipelines.json | tr -d '\n' | tr -d '\r')"
+      - id: output-pipeline-list
+        name: Show pipeline IDs
+        run: echo ${{ fromJson(steps.parse-pipelines.outputs.pipelines).pipelineIdList.*.id }}
