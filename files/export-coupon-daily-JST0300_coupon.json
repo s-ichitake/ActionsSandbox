@@ -55,7 +55,7 @@
             "scheduleType": "TIMESERIES",
             "type": "SqlDataNode",
             "table": "#{myRDSTableName}",
-            "selectQuery": "select * from #{table} limit 1"
+            "selectQuery": "select * from #{table}"
         },
         {
             "id": "DestinationS3Location",

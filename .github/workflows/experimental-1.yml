@@ -44,4 +44,3 @@ jobs:
       - id: list-diff
         name: List differences
         run: echo ${{ steps.get-diff-action.outputs.diff }}
-        if: steps.git-diff-action.outputs.diff
