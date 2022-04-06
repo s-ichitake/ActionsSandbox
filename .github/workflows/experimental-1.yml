@@ -30,7 +30,5 @@ jobs:
       - id: output-pipeline-list
         name: Show pipeline IDs
         run: |
-          ids=$(echo '${{ steps.parse-pipelines.outputs.pipelines }}' | jq -r '.pipelineIdList[].id')
-          echo $ids
-          names=$(echo '${{ steps.parse-pipelines.outputs.pipelines }}' | jq -r '.pipelineIdList[].name')
-          echo $names
+          id=$(echo '${{ steps.parse-pipelines.outputs.pipelines }}'jq -r '.pipelineIdList | map(select(.name == "rds-export-coupon-hourly_friend_code"))[0].id')
+          echo $id
