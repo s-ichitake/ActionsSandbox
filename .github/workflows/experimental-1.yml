@@ -45,8 +45,11 @@ jobs:
         name: List differences
         run: |
           echo "ADDED"
-          echo ${{ steps.get-changed-files.outputs.added_files }}
+          added=(${{ steps.get-changed-files.outputs.added_files }})
+          for a in ${added[@]}; do echo ${a}; done
           echo "MODIFIED"
-          echo ${{ steps.get-changed-files.outputs.modified_files }}
+          modified=(${{ steps.get-changed-files.outputs.modified_files }})
+          for m in ${modified[@]}; do echo ${m}; done
           echo "DELETED"
-          echo ${{ steps.get-changed-files.outputs.deleted_files }}
+          deleted=(${{ steps.get-changed-files.outputs.deleted_files }})
+          for d in ${deleted[@]}; do echo ${d}; done
