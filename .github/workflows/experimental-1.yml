@@ -19,11 +19,11 @@ jobs:
         run: git log --oneline
       # JSONをパースしてoutputにセット(改行を入れるとoutputが機能しないため除去)
       # create-pipeline が実行されたときの戻り値からPipelineのIDを得る想定
-      - id: get-created-pipeline-id
-        name: Get pipeline ID from create-pipeline response
+      - id: read-created-pipeline-id
+        name: Read pipeline ID from create-pipeline response
         run: |
           json1=$(cat pipeline-id.json | tr -d '\n' | tr -d '\r')
-          echo ${{ fromJson("${json1}").pipelineId }}
+          echo ${{ fromJson('${json1}').pipelineId }}
       # 
       - id: parse-pipelines
         name: Parse pipeline list
