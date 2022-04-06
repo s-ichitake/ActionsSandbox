@@ -41,15 +41,24 @@ jobs:
       - id: get-changed-files
         name: Get changed files
         uses: tj-actions/changed-files@v18.6
-      - id: list-diff
-        name: List differences
+      - id: list-added-files
+        name: List added files
+        if: steps.get-changed-files.outputs.added_files
         run: |
           echo "ADDED"
           added=(${{ steps.get-changed-files.outputs.added_files }})
           for a in ${added[@]}; do echo ${a}; done
+      - id: list-modified-files
+        name: List modified files
+        if: steps.get-changed-files.outputs.modified_files
+        run: |
           echo "MODIFIED"
           modified=(${{ steps.get-changed-files.outputs.modified_files }})
           for m in ${modified[@]}; do echo ${m}; done
+      - id: list-deleted-files
+        name: List deleted files
+        if: steps.get-changed-files.outputs.deleted_files
+        run: |
           echo "DELETED"
           deleted=(${{ steps.get-changed-files.outputs.deleted_files }})
           for d in ${deleted[@]}; do echo ${d}; done
