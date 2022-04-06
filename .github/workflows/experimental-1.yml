@@ -1,5 +1,8 @@
 name: Sample Github action
-on: push
+on:
+  push:
+    paths:
+      files/*.txt
 
 jobs:
   list-files:
@@ -50,7 +53,10 @@ jobs:
         run: |
           echo "ADDED"
           added=(${{ steps.get-changed-files.outputs.added_files }})
-          for a in ${added[@]}; do echo ${a}; done
+          for a in ${added[@]}
+          do
+            echo ${a}
+          done
       # 更新されたファイル群をリスト
       - id: list-modified-files
         name: List modified files
