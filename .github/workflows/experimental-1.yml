@@ -18,12 +18,9 @@ jobs:
       # create-pipeline が実行されたときの戻り値からPipelineのIDを得る想定
       - id: read-created-pipeline-id
         name: Read pipeline ID from create-pipeline response
-        run: echo "::set-output name=json1::$(cat pipeline-id.json | tr -d '\n' | tr -d '\r')"
-      # 前stepでパースして得たPipelineのIDを表示
-      # outputsに入れて渡さないと、コマンドからの出力はfromJsonで扱えない模様
-      - id: show-created-pipeline-id
-        name: Show pipeline ID
-        run: echo ${{ fromJson(steps.read-created-pipeline-id.outputs.json1).pipelineId }}
+        run: |
+          pid=$(cat pipeline-id.json | tr -d '\n' | tr -d '\r' | jq -r .pipelineId)
+          echo $pid
       # jqを使ってJSONをパースし、任意の要素を特定してその値を得る
       # list-pipelinesからの戻り値を使って、Pipelineのnameから目的のIDを特定する想定
       - id: parse-pipelines
