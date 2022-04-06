@@ -43,4 +43,4 @@ jobs:
         uses: technote-space/get-diff-action@v4.0.1
       - id: list-diff
         name: List differences
-        run: echo ${{ steps.get-diff-action.outputs.diff }}
+        run: echo ${{ steps.get-diff-action.outputs.diffs }}
