@@ -30,4 +30,7 @@ jobs:
       - id: output-pipeline-list
         name: Show pipeline IDs
         run: |
-          echo '${{ steps.parse-pipelines.outputs.pipelines }}'
+          ids=$(echo '${{ steps.parse-pipelines.outputs.pipelines }}' | jq -r '.pipelineIdList[].id')
+          echo $ids
+          names=$(echo '${{ steps.parse-pipelines.outputs.pipelines }}' | jq -r '.pipelineIdList[].name')
+          echo $names
