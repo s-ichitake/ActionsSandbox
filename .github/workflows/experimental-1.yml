@@ -1,8 +1,5 @@
 name: Sample Github action
-on:
-  push:
-    paths:
-      files/*.txt
+on: push
 
 jobs:
   list-files:
