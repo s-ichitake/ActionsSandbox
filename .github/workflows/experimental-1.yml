@@ -49,4 +49,4 @@ jobs:
           echo "MODIFIED"
           echo ${{ steps.get-changed-files.outputs.modified_files }}
           echo "DELETED"
-          echo ${{ steps.get-changed.files.output.deleted_files }}
+          echo ${{ steps.get-changed.files.outputs.deleted_files }}
