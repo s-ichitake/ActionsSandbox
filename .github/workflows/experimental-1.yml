@@ -33,14 +33,17 @@ jobs:
     name: Differences
     runs-on: ubuntu-latest
     steps:
+      # checkout
       - id: checkout
         name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      # changed-files action を使って差分を検知
       - id: get-changed-files
         name: Get changed files
         uses: tj-actions/changed-files@v18.6
+      # 追加されたファイル群をリスト
       - id: list-added-files
         name: List added files
         if: steps.get-changed-files.outputs.added_files
@@ -48,6 +51,7 @@ jobs:
           echo "ADDED"
           added=(${{ steps.get-changed-files.outputs.added_files }})
           for a in ${added[@]}; do echo ${a}; done
+      # 更新されたファイル群をリスト
       - id: list-modified-files
         name: List modified files
         if: steps.get-changed-files.outputs.modified_files
@@ -55,6 +59,7 @@ jobs:
           echo "MODIFIED"
           modified=(${{ steps.get-changed-files.outputs.modified_files }})
           for m in ${modified[@]}; do echo ${m}; done
+      # 削除されたファイル群をリスト
       - id: list-deleted-files
         name: List deleted files
         if: steps.get-changed-files.outputs.deleted_files
