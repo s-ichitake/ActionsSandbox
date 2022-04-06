@@ -1,0 +1,139 @@
+{
+    "objects": [
+        {
+            "id": "RDSToS3CopyActivity",
+            "name": "RDSToS3CopyActivity",
+            "output": {
+                "ref": "DestinationS3Location"
+            },
+            "input": {
+                "ref": "SourceRDSTable"
+            },
+            "schedule": {
+                "ref": "DefaultSchedule"
+            },
+            "scheduleType": "TIMESERIES",
+            "runsOn": {
+                "ref": "Ec2Instance"
+            },
+            "type": "CopyActivity"
+        },
+        {
+            "id": "Ec2Instance",
+            "name": "Ec2Instance",
+            "subnetId": "subnet-051b43bf6023f9f73",
+            "scheduleType": "TIMESERIES",
+            "securityGroupIds": "sg-02ceb45ae2bdf6eda",
+            "instanceType": "#{myEC2InstanceType}",
+            "actionOnTaskFailure": "terminate",
+            "securityGroups": "#{myEc2RdsSecurityGrps}",
+            "type": "Ec2Resource",
+            "terminateAfter": "30 Minutes"
+        },
+        {
+            "id": "rds_mysql",
+            "name": "rds_mysql",
+            "connectionString": "jdbc:mysql://mintaku-database-cluster.cluster-cvixqp7bcmjr.ap-northeast-1.rds.amazonaws.com/mintaku",
+            "*password": "#{*myRDSPassword}",
+            "type": "JdbcDatabase",
+            "jdbcDriverClass": "s3://rds-export-ride-program.server.mintaku.co.jp/mysql-connector-java-5.1.48-bin.jar",
+            "username": "mintaku_user"
+        },
+        {
+            "id": "DefaultSchedule",
+            "name": "Every 1 day",
+            "period": "1 days",
+            "startDateTime": "2021-09-02T18:00:00",
+            "type": "Schedule"
+        },
+        {
+            "id": "SourceRDSTable",
+            "name": "SourceRDSTable",
+            "database": {
+                "ref": "rds_mysql"
+            },
+            "scheduleType": "TIMESERIES",
+            "type": "SqlDataNode",
+            "table": "#{myRDSTableName}",
+            "selectQuery": "select * from #{table}"
+        },
+        {
+            "id": "DestinationS3Location",
+            "name": "DestinationS3Location",
+            "scheduleType": "TIMESERIES",
+            "directoryPath": "#{myOutputS3Loc}/#{format(@scheduledStartTime, 'YYYY-MM-dd-HH-mm-ss')}",
+            "type": "S3DataNode"
+        },
+        {
+            "id": "Default",
+            "name": "Default",
+            "failureAndRerunMode": "CASCADE",
+            "schedule": {
+                "ref": "DefaultSchedule"
+            },
+            "resourceRole": "DataPipelineDefaultResourceRole",
+            "role": "DataPipelineDefaultRole",
+            "pipelineLogUri": "s3://rds-export-reserve-order.server.sride.co.jp/log",
+            "scheduleType": "cron"
+        }
+    ],
+    "parameters": [
+        {
+            "id": "myRDSTableLastModifiedCol",
+            "helpText": "Name of the column that stores the last modified time value in the RDS MySQL table.",
+            "description": "Last modified column name",
+            "type": "String"
+        },
+        {
+            "id": "*myRDSPassword",
+            "description": "RDS MySQL password",
+            "type": "String"
+        },
+        {
+            "id": "myRDSTableName",
+            "description": "RDS MySQL table name",
+            "type": "String"
+        },
+        {
+            "id": "myOutputS3Loc",
+            "description": "Output S3 folder",
+            "type": "AWS::S3::ObjectKey"
+        },
+        {
+            "id": "myEc2RdsSecurityGrps",
+            "watermark": "security group name",
+            "helpText": "The names of one or more EC2 security groups that have access to the RDS cluster.",
+            "description": "RDS MySQL security group(s)",
+            "isArray": "true",
+            "optional": "true",
+            "type": "String"
+        },
+        {
+            "id": "myRDSUsername",
+            "description": "RDS MySQL username",
+            "type": "String"
+        },
+        {
+            "id": "myEC2InstanceType",
+            "default": "t1.micro",
+            "helpText": "The type of the EC2 instance that will be launched on your behalf to do the copy",
+            "description": "EC2 instance type",
+            "type": "String"
+        },
+        {
+            "id": "myRDSInstanceId",
+            "watermark": "DB Instance",
+            "description": "RDS Instance ID",
+            "type": "String"
+        }
+    ],
+    "values": {
+        "myRDSInstanceId": "mm1iukkq1bd80we",
+        "myRDSUsername": "mintaku_user",
+        "myRDSTableLastModifiedCol": "update_timestamp",
+        "myEC2InstanceType": "t1.micro",
+        "myOutputS3Loc": "s3://rds-export-coupon.server.sride.co.jp/coupon",
+        "*myRDSPassword": "jP(F97knYu&,B8gaC3#fSx$yMeJg-HYY_mintaku",
+        "myRDSTableName": "coupon"
+    }
+}
