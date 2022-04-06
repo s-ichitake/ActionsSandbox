@@ -38,9 +38,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - id: get-diff-action
-        name: Get diff
-        uses: technote-space/get-diff-action@v4.0.1
+      - id: get-changed-files
+        name: Get changed files
+        uses: tj-actions/changed-files@v18.6
       - id: list-diff
         name: List differences
-        run: echo ${{ steps.get-diff-action.diffs }}
+        run: |
+          echo "ADDED"
+          echo ${{ steps.get-changed-files.outputs.added_files }}
+          echo "MODIFIED"
+          echo ${{ steps.get-changed-files.outputs.modified_files }}
+          echo "DELETED"
+          echo ${{ steps.get-changed.files.output.deleted_files }}
