@@ -29,6 +29,4 @@ jobs:
         run: echo "::set-output name=pipelines::$(cat list-pipelines.json | tr -d '\n' | tr -d '\r')"
       - id: output-pipeline-list
         name: Show pipeline IDs
-        run: |
-          pipelines=${{ fromJson(steps.parse-pipelines.outputs.pipelines).pipelineIdList.*.id }}
-          for pipeline in ${pipelines[@]};do echo $pipeline;done
+        run: echo ${{ fromJson(steps.parse-pipelines.outputs.pipelines) }}
