@@ -33,5 +33,5 @@ jobs:
         name: Parse pipeline list
         run: |
           json2=$(cat list-pipelines.json | tr -d '\n' | tr -d '\r')
-          id=$(echo "${json2}" | jq -r '.pipelineIdList | map(select(.name == "rds-export-coupon-hourly_friend_code"))[0].id')
+          id=$(echo "${json2}" | jq -r '.pipelineIdList | map(select(.name == "export-coupon-daily-JST0300_coupon_code"))[0].id')
           echo $id
