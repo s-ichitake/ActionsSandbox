@@ -6,17 +6,11 @@ jobs:
     name: Confirmation
     runs-on: ubuntu-latest
     steps:
-      - id: echo
-        name: Echo
-        run: echo "Pushed."
       - id: checkout
         name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - id: test-git-command
-        name: Test for git command usability
-        run: git log --oneline
       # JSONをパースしてoutputにセット(改行を入れるとoutputが機能しないため除去)
       # create-pipeline が実行されたときの戻り値からPipelineのIDを得る想定
       - id: read-created-pipeline-id
@@ -35,3 +29,19 @@ jobs:
           json2=$(cat list-pipelines.json | tr -d '\n' | tr -d '\r')
           id=$(echo "${json2}" | jq -r '.pipelineIdList | map(select(.name == "export-coupon-daily-JST0300_coupon_code"))[0].id')
           echo $id
+  detect-differences:
+    name: Differences
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - id: get-diff-action
+        name: Get diff
+        uses: technote-space/get-diff-action@v4.0.1
+      - id: list-diff
+        name: List differences
+        run: echo ${{ steps.get-diff-action.outputs.diff }}
+        if: steps.git-diff-action.outputs.diff
