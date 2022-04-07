@@ -4,7 +4,7 @@ on: push
 jobs:
   list-files:
     name: Confirmation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - id: checkout
         name: Checkout
@@ -20,12 +20,15 @@ jobs:
           echo $pid
       # jqを使ってJSONをパースし、任意の要素を特定してその値を得る
       # list-pipelinesからの戻り値を使って、Pipelineのnameから目的のIDを特定する想定
-      - id: parse-pipelines
+      - id: output-pipelines
         name: Parse pipeline list
+        run: echo "::set-output name=my_json::$(cat list-pipelines.json | tr -d '\n' | tr -d '\r')"
+      - id: show-pipelines
+        name: Identify pipeline ID
         run: |
-          json2=$(cat list-pipelines.json | tr -d '\n' | tr -d '\r')
-          id=$(echo "${json2}" | jq -r '.pipelineIdList | map(select(.name == "export-coupon-daily-JST0300_coupon_code"))[0].id')
-          echo $id
+          json='${{ steps.output-pipelines.outputs.my_json }}'
+          id=$(echo "${json}" | jq -r '.pipelineIdList | map(select(.name == "export-coupon-daily-JST0300_coupon_code"))[0].id')
+          echo "ID = ${id}"
   detect-differences:
     name: Differences
     runs-on: ubuntu-latest
