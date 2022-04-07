@@ -27,8 +27,7 @@ jobs:
         name: Identify pipeline ID
         run: |
           json='${{ steps.output-pipelines.outputs.my_json }}'
-          id=$(echo '${json}' | jq -r '.pipelineIdList | map(select(.name == "export-coupon-daily-JST0300_coupon_code"))[0].id')
-          echo "ID = ${id}"
+          echo ${json} | jq .
   detect-differences:
     name: Differences
     runs-on: ubuntu-latest
