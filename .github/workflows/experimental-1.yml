@@ -27,8 +27,9 @@ jobs:
         name: Identify pipeline ID
         run: |
           json='${{ steps.output-pipelines.outputs.my_json }}'
-          id=$(echo ${json} | jq -r '.pipelineIdList[] | select(.name == "rds-export-reserve-daily-JST0300_spot_address").id')
-          echo "ID = ${id}"
+          pname='rds-export-reserve-daily-JST0300_spot_address'
+          id=$(echo ${json} | jq -r '.pipelineIdList[] | select(.name == "${pname}").id')
+          echo "NAME = ${pname}, ID = ${id}"
   detect-differences:
     name: Differences
     runs-on: ubuntu-latest
