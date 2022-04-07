@@ -27,7 +27,7 @@ jobs:
         name: Identify pipeline ID
         run: |
           json='${{ steps.output-pipelines.outputs.my_json }}'
-          echo ${json} | jq .
+          echo ${json} | jq -r '.pipelineIdList[].name'
   detect-differences:
     name: Differences
     runs-on: ubuntu-latest
